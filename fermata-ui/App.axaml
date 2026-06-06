@@ -1,0 +1,36 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FermataUI.App"
+             RequestedThemeVariant="Light">
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <!-- Warm Parchment Palette -->
+      <Color x:Key="FermataBg">#F4EFE4</Color>
+      <Color x:Key="FermataSurface">#EBE4D6</Color>
+      <Color x:Key="FermataText">#2A2420</Color>
+      <Color x:Key="FermataMuted">#9A8F84</Color>
+      <Color x:Key="FermataAccent">#7D4E2D</Color>
+      <Color x:Key="FermataBorder">#C5BBAA</Color>
+      <Color x:Key="FermataBtnBg">#EBE4D6</Color>
+
+      <SolidColorBrush x:Key="FermataBgBrush" Color="{StaticResource FermataBg}"/>
+      <SolidColorBrush x:Key="FermataSurfaceBrush" Color="{StaticResource FermataSurface}"/>
+      <SolidColorBrush x:Key="FermataTextBrush" Color="{StaticResource FermataText}"/>
+      <SolidColorBrush x:Key="FermataMutedBrush" Color="{StaticResource FermataMuted}"/>
+      <SolidColorBrush x:Key="FermataAccentBrush" Color="{StaticResource FermataAccent}"/>
+      <SolidColorBrush x:Key="FermataBorderBrush" Color="{StaticResource FermataBorder}"/>
+      <SolidColorBrush x:Key="FermataBtnBgBrush" Color="{StaticResource FermataBtnBg}"/>
+
+      <!-- Lora font family (embedded TTF) -->
+      <FontFamily x:Key="LoraFont">avares://FermataUI/Assets/Fonts#Lora</FontFamily>
+    </ResourceDictionary>
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme/>
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+    <StyleInclude Source="avares://FermataUI/Styles/FermataStyles.axaml"/>
+  </Application.Styles>
+
+</Application>

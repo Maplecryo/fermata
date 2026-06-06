@@ -1,0 +1,16 @@
+# Rust build output
+target/
+build/
+
+# .NET build output
+fermata-ui/bin/
+fermata-ui/obj/
+
+# macOS app bundle (built from source via build-app.sh)
+Fermata.app/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log

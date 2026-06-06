@@ -1,0 +1,49 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Base button: warm parchment resting state -->
+  <Style Selector="Button.FermataBtn">
+    <Setter Property="Background" Value="{StaticResource FermataBtnBgBrush}"/>
+    <Setter Property="Foreground" Value="{StaticResource FermataTextBrush}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource FermataBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="FontFamily" Value="{StaticResource LoraFont}"/>
+    <Setter Property="FontSize" Value="13"/>
+    <Setter Property="Padding" Value="16,8"/>
+  </Style>
+  <Style Selector="Button.FermataBtn:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#DDD5C3"/>
+  </Style>
+
+  <!-- Continue button: accent border, accent label -->
+  <Style Selector="Button.FermataBtn.Continue">
+    <Setter Property="BorderBrush" Value="{StaticResource FermataAccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1.5"/>
+    <Setter Property="Foreground" Value="{StaticResource FermataAccentBrush}"/>
+  </Style>
+  <Style Selector="Button.FermataBtn.Continue:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#F0E8DC"/>
+  </Style>
+  <Style Selector="Button.FermataBtn.Continue:disabled">
+    <Setter Property="Opacity" Value="0.4"/>
+  </Style>
+
+  <!-- TextBox: surface bg, warm border -->
+  <Style Selector="TextBox.FermataInput">
+    <Setter Property="Background" Value="{StaticResource FermataSurfaceBrush}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource FermataBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="FontFamily" Value="{StaticResource LoraFont}"/>
+    <Setter Property="FontSize" Value="13"/>
+    <Setter Property="Foreground" Value="{StaticResource FermataTextBrush}"/>
+    <Setter Property="Padding" Value="8,6"/>
+  </Style>
+
+  <!-- Slider: accent thumb colour only (Track bg not styleable via template) -->
+  <Style Selector="Slider.FermataSlider /template/ Thumb">
+    <Setter Property="Background" Value="{StaticResource FermataAccentBrush}"/>
+  </Style>
+
+</Styles>

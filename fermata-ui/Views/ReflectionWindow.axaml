@@ -1,0 +1,98 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FermataUI.ViewModels"
+        x:Class="FermataUI.Views.ReflectionWindow"
+        x:DataType="vm:ReflectionViewModel"
+        Title="Fermata"
+        Width="480"
+        SizeToContent="Height"
+        MinHeight="320"
+        CanResize="False"
+        ShowInTaskbar="False"
+        Topmost="True"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource FermataBgBrush}">
+
+  <Window.Styles>
+    <Style Selector="Window">
+      <Setter Property="BorderBrush" Value="{StaticResource FermataBorderBrush}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+  </Window.Styles>
+
+  <Border BorderBrush="{StaticResource FermataBorderBrush}"
+          BorderThickness="1"
+          CornerRadius="6"
+          Background="{StaticResource FermataBgBrush}"
+          Padding="36,32,36,28">
+
+    <StackPanel Spacing="0">
+
+      <!-- Header -->
+      <TextBlock Text="You are opening"
+                 FontFamily="{StaticResource LoraFont}"
+                 FontStyle="Italic"
+                 FontSize="11"
+                 Foreground="{StaticResource FermataMutedBrush}"
+                 Margin="0,0,0,4"/>
+
+      <TextBlock Text="{Binding AppName}"
+                 FontFamily="{StaticResource LoraFont}"
+                 FontWeight="Bold"
+                 FontSize="26"
+                 Foreground="{StaticResource FermataTextBrush}"
+                 Margin="0,0,0,12"/>
+
+      <TextBlock Text="Take a moment before continuing."
+                 FontFamily="{StaticResource LoraFont}"
+                 FontSize="13"
+                 Foreground="{StaticResource FermataMutedBrush}"
+                 Margin="0,0,0,20"/>
+
+      <!-- Journal prompt (conditional) -->
+      <TextBox Classes="FermataInput"
+               Text="{Binding JournalText}"
+               Watermark="What are you planning to do?"
+               AcceptsReturn="True"
+               TextWrapping="Wrap"
+               Height="72"
+               Margin="0,0,0,20"
+               IsVisible="{Binding ShowJournal}"/>
+
+      <!-- Countdown -->
+      <StackPanel HorizontalAlignment="Center" Spacing="4" Margin="0,0,0,24">
+        <TextBlock x:Name="CountdownNumber"
+                   Text="{Binding CountdownSeconds}"
+                   FontFamily="{StaticResource LoraFont}"
+                   FontWeight="Bold"
+                   FontSize="48"
+                   Foreground="{StaticResource FermataAccentBrush}"
+                   HorizontalAlignment="Center"/>
+        <TextBlock Text="{Binding CountdownLabel}"
+                   FontFamily="{StaticResource LoraFont}"
+                   FontSize="10"
+                   Foreground="{StaticResource FermataMutedBrush}"
+                   HorizontalAlignment="Center"/>
+      </StackPanel>
+
+      <!-- Buttons -->
+      <Grid ColumnDefinitions="*,16,*">
+        <Button Grid.Column="0"
+                Classes="FermataBtn"
+                Content="Cancel"
+                HorizontalAlignment="Stretch"
+                Command="{Binding CancelCommand}"/>
+        <Button Grid.Column="2"
+                Classes="FermataBtn Continue"
+                Content="Continue"
+                HorizontalAlignment="Stretch"
+                IsEnabled="{Binding CanContinue}"
+                Command="{Binding ContinueCommand}"/>
+      </Grid>
+
+    </StackPanel>
+  </Border>
+
+</Window>

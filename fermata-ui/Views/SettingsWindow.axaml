@@ -1,0 +1,143 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FermataUI.ViewModels"
+        x:Class="FermataUI.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Title="Fermata — Settings"
+        Width="520"
+        Height="440"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource FermataBgBrush}">
+
+  <ScrollViewer Padding="32,28,32,28">
+    <StackPanel Spacing="24">
+
+      <!-- Restricted Applications -->
+      <StackPanel Spacing="8">
+        <TextBlock Text="Restricted Applications"
+                   FontFamily="{StaticResource LoraFont}"
+                   FontWeight="Bold"
+                   FontSize="14"
+                   Foreground="{StaticResource FermataTextBrush}"/>
+
+        <Border BorderBrush="{StaticResource FermataBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                MaxHeight="160">
+          <ListBox ItemsSource="{Binding Apps}"
+                   SelectedItem="{Binding SelectedApp}"
+                   Background="{StaticResource FermataBgBrush}">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="FontFamily" Value="{StaticResource LoraFont}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Foreground" Value="{StaticResource FermataTextBrush}"/>
+                <Setter Property="Padding" Value="10,6"/>
+              </Style>
+              <Style Selector="ListBoxItem:nth-child(2n)">
+                <Setter Property="Background" Value="{StaticResource FermataSurfaceBrush}"/>
+              </Style>
+              <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                <Setter Property="BorderBrush" Value="{StaticResource FermataAccentBrush}"/>
+                <Setter Property="BorderThickness" Value="1.5,0,0,0"/>
+              </Style>
+            </ListBox.Styles>
+          </ListBox>
+        </Border>
+
+        <!-- Add row -->
+        <Grid ColumnDefinitions="*,8,Auto">
+          <TextBox Grid.Column="0"
+                   Classes="FermataInput"
+                   Text="{Binding NewAppInput}"
+                   Watermark="{Binding AppInputWatermark}"/>
+          <Button Grid.Column="2"
+                  Classes="FermataBtn"
+                  Content="Add"
+                  Foreground="{StaticResource FermataAccentBrush}"
+                  Command="{Binding AddCommand}"/>
+        </Grid>
+
+        <!-- Inline error -->
+        <TextBlock Text="{Binding InputError}"
+                   FontFamily="{StaticResource LoraFont}"
+                   FontStyle="Italic"
+                   FontSize="12"
+                   Foreground="{StaticResource FermataMutedBrush}"
+                   IsVisible="{Binding InputError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+        <!-- Remove button (two-stage) -->
+        <Button Classes="FermataBtn"
+                HorizontalAlignment="Left"
+                IsEnabled="{Binding SelectedApp, Converter={x:Static ObjectConverters.IsNotNull}}"
+                Command="{Binding RemoveCommand}">
+          <Button.Styles>
+            <Style Selector="Button.FermataBtn[IsEnabled=true]">
+              <Setter Property="BorderBrush" Value="{StaticResource FermataBorderBrush}"/>
+            </Style>
+          </Button.Styles>
+          <TextBlock Text="{Binding RemoveButtonLabel}"/>
+        </Button>
+      </StackPanel>
+
+      <!-- Delay -->
+      <StackPanel Spacing="6">
+        <TextBlock Text="Seconds before you can continue"
+                   FontFamily="{StaticResource LoraFont}"
+                   FontSize="13"
+                   Foreground="{StaticResource FermataMutedBrush}"/>
+        <Grid ColumnDefinitions="*,12,Auto">
+          <Slider Grid.Column="0"
+                  Classes="FermataSlider"
+                  Minimum="10" Maximum="120"
+                  TickFrequency="5"
+                  IsSnapToTickEnabled="True"
+                  Value="{Binding DelaySeconds}"/>
+          <TextBlock Grid.Column="2"
+                     Text="{Binding DelaySeconds}"
+                     FontFamily="{StaticResource LoraFont}"
+                     FontWeight="SemiBold"
+                     FontSize="14"
+                     Foreground="{StaticResource FermataAccentBrush}"
+                     VerticalAlignment="Center"/>
+        </Grid>
+      </StackPanel>
+
+      <!-- Journal -->
+      <StackPanel Spacing="6">
+        <CheckBox Content="Require a journal entry before continuing"
+                  IsChecked="{Binding RequireJournal}"
+                  FontFamily="{StaticResource LoraFont}"
+                  FontSize="13"
+                  Foreground="{StaticResource FermataTextBrush}">
+          <CheckBox.Styles>
+            <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+              <Setter Property="Background" Value="{StaticResource FermataAccentBrush}"/>
+            </Style>
+          </CheckBox.Styles>
+        </CheckBox>
+      </StackPanel>
+
+      <!-- Save -->
+      <StackPanel Spacing="6">
+        <Button Classes="FermataBtn"
+                HorizontalAlignment="Stretch"
+                Content="Save Changes"
+                Background="{StaticResource FermataAccentBrush}"
+                Foreground="#F4EFE4"
+                BorderThickness="0"
+                Command="{Binding SaveCommand}"/>
+        <TextBlock Text="{Binding SaveConfirmation}"
+                   FontFamily="{StaticResource LoraFont}"
+                   FontStyle="Italic"
+                   FontSize="12"
+                   Foreground="{StaticResource FermataMutedBrush}"
+                   HorizontalAlignment="Center"
+                   IsVisible="{Binding SaveConfirmation, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</Window>

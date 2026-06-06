@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fermata-gallery",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "7823", "--directory", "/Users/admin/Projects/ScreenTimeProject/gallery"],
+      "port": 7823
+    }
+  ]
+}

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fermata — UI Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:       #F4EFE4;
+    --surface:  #EBE4D6;
+    --text:     #2A2420;
+    --muted:    #9A8F84;
+    --accent:   #7D4E2D;
+    --border:   #C5BBAA;
+    --btnbg:    #EBE4D6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #1a1714;
+    font-family: 'Lora', Georgia, serif;
+    padding: 48px 32px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    color: var(--border);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 48px;
+    opacity: 0.6;
+  }
+
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .card-label {
+    color: var(--border);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  /* ── Shared window chrome ── */
+  .window {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Lora', Georgia, serif;
+    color: var(--text);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+  }
+
+  /* ── Reflection Window ── */
+  .reflection {
+    width: 480px;
+    padding: 36px 36px 28px;
+  }
+
+  .reflection .opener {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .reflection .app-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .reflection .tagline {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .journal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: 'Lora', Georgia, serif;
+    color: var(--muted);
+    font-style: italic;
+    height: 72px;
+    width: 100%;
+    margin-bottom: 20px;
+    resize: none;
+    outline: none;
+  }
+  .countdown-wrap {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .countdown-num {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+  }
+  .countdown-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+  }
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .btn {
+    background: var(--btnbg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 13px;
+    padding: 9px 0;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn.continue {
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+  }
+  .btn.disabled {
+    opacity: 0.4;
+  }
+
+  /* ── Settings Window ── */
+  .settings {
+    width: 520px;
+  }
+  .win-titlebar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .win-dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--border); }
+  .win-body { padding: 28px 32px 28px; }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .app-list {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .app-row {
+    font-size: 13px;
+    padding: 7px 12px;
+    color: var(--text);
+  }
+  .app-row:nth-child(even) { background: var(--surface); }
+  .app-row.selected {
+    border-left: 1.5px solid var(--accent);
+    background: var(--surface);
+    color: var(--accent);
+  }
+  .add-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    outline: none;
+  }
+  .section { margin-bottom: 22px; }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  input[type=range] {
+    flex: 1;
+    accent-color: var(--accent);
+  }
+  .slider-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 28px;
+    text-align: right;
+  }
+  .muted-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
+  .save-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #F4EFE4;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 13px;
+    padding: 11px 0;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  /* ── History Window ── */
+  .history { width: 700px; }
+  .summary-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    display: block;
+  }
+  .stat-num.accent { color: var(--accent); }
+  .stat-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+  }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  th:hover { color: var(--text); }
+  td { padding: 8px 12px; color: var(--text); }
+  tr:nth-child(even) td { background: var(--surface); }
+  tr:hover td { background: var(--surface); }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    border-radius: 3px;
+    padding: 2px 8px;
+  }
+  .pill.continued { background: #F0E6DC; color: var(--accent); }
+  .pill.cancelled { background: #F5E8E8; color: #8A4040; }
+  .pill.timeout   { background: var(--surface); color: var(--muted); }
+  .journal-cell { color: var(--muted); font-style: italic; }
+  .load-more-wrap { padding: 12px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Fermata — UI Gallery</h1>
+
+<div class="gallery">
+
+  <!-- ── 1. Reflection Window (with journal) ── -->
+  <div>
+    <p class="card-label">Reflection Window</p>
+    <div class="window reflection">
+      <div class="opener">You are opening</div>
+      <div class="app-name">Steam</div>
+      <div class="tagline">Take a moment before continuing.</div>
+      <textarea class="journal-box" placeholder="What are you planning to do?"></textarea>
+      <div class="countdown-wrap">
+        <span class="countdown-num">18</span>
+        <span class="countdown-label">seconds left</span>
+      </div>
+      <div class="btn-row">
+        <div class="btn">Cancel</div>
+        <div class="btn continue disabled">Continue</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. Reflection Window (countdown finished) ── -->
+  <div>
+    <p class="card-label">Reflection — Ready</p>
+    <div class="window reflection">
+      <div class="opener">You are opening</div>
+      <div class="app-name">Discord</div>
+      <div class="tagline">Take a moment before continuing.</div>
+      <div class="countdown-wrap" style="margin-bottom:24px;">
+        <span class="countdown-num">0</span>
+        <span class="countdown-label" style="color:var(--accent);">ready when you are</span>
+      </div>
+      <div class="btn-row">
+        <div class="btn">Cancel</div>
+        <div class="btn continue">Continue</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. Settings Window ── -->
+  <div>
+    <p class="card-label">Settings</p>
+    <div class="window settings">
+      <div class="win-titlebar">
+        <div class="win-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        Fermata — Settings
+      </div>
+      <div class="win-body">
+        <div class="section">
+          <div class="section-title">Restricted Applications</div>
+          <div class="app-list">
+            <div class="app-row">steam.exe</div>
+            <div class="app-row selected">discord.exe</div>
+            <div class="app-row">youtube.exe</div>
+          </div>
+          <div class="add-row">
+            <input class="input" placeholder="e.g. reddit.exe" value=""/>
+            <div class="btn" style="width:64px;text-align:center;padding:7px 0;color:var(--accent);">Add</div>
+          </div>
+          <div class="btn" style="display:inline-block;padding:6px 16px;font-size:13px;color:#8A4040;border-color:var(--accent);">Are you sure?</div>
+        </div>
+
+        <div class="section">
+          <div class="muted-label">Seconds before you can continue</div>
+          <div class="slider-row">
+            <input type="range" min="10" max="120" step="5" value="30" class="slider"/>
+            <span class="slider-val">30</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="checkbox-row">
+            <input type="checkbox" checked/>
+            Require a journal entry before continuing
+          </div>
+        </div>
+
+        <button class="save-btn">Save Changes</button>
+        <div style="text-align:center;margin-top:6px;font-style:italic;font-size:12px;color:var(--muted);">Saved.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. History Window ── -->
+  <div>
+    <p class="card-label">History</p>
+    <div class="window history">
+      <div class="win-titlebar">
+        <div class="win-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        Fermata — History
+      </div>
+      <div class="summary-bar">
+        <div class="stat">
+          <span class="stat-num">12</span>
+          <span class="stat-lbl">This week</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num accent">7</span>
+          <span class="stat-lbl">Continued</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">5</span>
+          <span class="stat-lbl">Cancelled</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date / Time ↓</th>
+            <th>Application</th>
+            <th>Waited</th>
+            <th>Outcome</th>
+            <th>Journal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-06-01 14:22</td>
+            <td>steam.exe</td>
+            <td>34 s</td>
+            <td><span class="pill continued">Continued</span></td>
+            <td class="journal-cell">Play one ranked match before bed</td>
+          </tr>
+          <tr>
+            <td>2026-06-01 11:05</td>
+            <td>discord.exe</td>
+            <td>8 s</td>
+            <td><span class="pill cancelled">Cancelled</span></td>
+            <td class="journal-cell">—</td>
+          </tr>
+          <tr>
+            <td>2026-05-31 22:48</td>
+            <td>steam.exe</td>
+            <td>60 s</td>
+            <td><span class="pill timeout">Timeout</span></td>
+            <td class="journal-cell">—</td>
+          </tr>
+          <tr>
+            <td>2026-05-31 19:30</td>
+            <td>discord.exe</td>
+            <td>31 s</td>
+            <td><span class="pill continued">Continued</span></td>
+            <td class="journal-cell">Check in with the study group</td>
+          </tr>
+          <tr>
+            <td>2026-05-31 15:12</td>
+            <td>steam.exe</td>
+            <td>30 s</td>
+            <td><span class="pill cancelled">Cancelled</span></td>
+            <td class="journal-cell">—</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="load-more-wrap">
+        <div class="btn" style="display:inline-block;padding:7px 24px;font-size:13px;color:var(--muted);">Load more</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
