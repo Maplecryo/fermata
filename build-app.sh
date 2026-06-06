@@ -35,6 +35,9 @@ dotnet publish "$ROOT/fermata-ui/FermataUI.csproj" \
   --nologo \
   -o "$ROOT/build/ui"
 
+echo "==> Generating icons"
+python3 "$ROOT/make-icons.py"
+
 echo "==> Assembling Fermata.app"
 mkdir -p "$MACOS" "$RESOURCES"
 
@@ -62,6 +65,9 @@ kill "$MONITOR_PID" 2>/dev/null || true
 wait "$MONITOR_PID" 2>/dev/null || true
 LAUNCHER
 chmod +x "$MACOS/Fermata"
+
+# App icon
+cp "$ROOT/fermata-ui/Assets/AppIcon.icns" "$RESOURCES/AppIcon.icns"
 
 # Binaries
 cp "$ROOT/target/release/fermata-monitor" "$MACOS/fermata-monitor"

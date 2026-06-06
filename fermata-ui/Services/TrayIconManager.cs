@@ -4,6 +4,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform;
 using FermataUI.ViewModels;
 using FermataUI.Views;
 
@@ -66,8 +67,12 @@ public class TrayIconManager : IDisposable
         exitItem.Click += (_, _) => _lifetime.Shutdown();
         menu.Add(exitItem);
 
+        var icon = new WindowIcon(
+            AssetLoader.Open(new Uri("avares://FermataUI/Assets/Icons/TrayIcon.png")));
+
         _trayIcon = new TrayIcon
         {
+            Icon = icon,
             ToolTipText = "Fermata",
             Menu = menu
         };
