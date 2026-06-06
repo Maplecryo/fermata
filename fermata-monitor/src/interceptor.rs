@@ -4,6 +4,7 @@
 
 use std::{
     collections::{HashMap, HashSet},
+    sync::{Arc, atomic::{AtomicBool, Ordering}},
     time::{Duration, Instant},
 };
 
@@ -76,14 +77,18 @@ impl Interceptor {
     }
 
     /// Intercept flow: kill → IPC → relaunch (if "continue").
+    ///
+    /// While blocked waiting for the user to respond, a background thread
+    /// continuously kills any new instances of the same app that open —
+    /// preventing the user from bypassing the block by relaunching quickly.
     pub fn intercept(&mut self, info: &ProcessInfo) -> Result<()> {
         let key = info.exe_name.to_lowercase();
 
         kill(info.pid)?;
         log::info!("killed {} (pid {})", info.exe_name, info.pid);
 
-        // Short cooldown after kill so the process doesn't get re-detected
-        // while we wait for the user to respond.
+        // Short cooldown so the monitor loop doesn't re-detect this PID
+        // during the brief window before the process fully exits.
         self.cooldowns.insert(key.clone(), Instant::now() - RELAUNCH_COOLDOWN + KILL_COOLDOWN);
 
         let event = InterceptEvent::new(
@@ -93,7 +98,33 @@ impl Interceptor {
             &info.working_dir,
         );
 
-        // Edge case 6: any IPC error → cancel, do not relaunch.
+        // Spawn a thread that kills any new instances launched while we are
+        // blocked waiting for the user to respond in the UI. Without this,
+        // a second launch of the same app would run freely because the
+        // monitor poll loop is frozen inside this function.
+        let waiting = Arc::new(AtomicBool::new(true));
+        let waiting_clone = Arc::clone(&waiting);
+        let exe_name_clone = info.exe_name.clone();
+        let killer = std::thread::spawn(move || {
+            while waiting_clone.load(Ordering::Relaxed) {
+                std::thread::sleep(Duration::from_millis(400));
+                if !waiting_clone.load(Ordering::Relaxed) {
+                    break;
+                }
+                if let Ok(procs) = crate::monitor::snapshot_processes() {
+                    for p in procs {
+                        if p.exe_name == exe_name_clone {
+                            log::info!(
+                                "killing duplicate instance of {} (pid {}) launched during block",
+                                exe_name_clone, p.pid
+                            );
+                            kill(p.pid).ok();
+                        }
+                    }
+                }
+            }
+        });
+
         let action = match ipc::send_event(&event) {
             Ok(a) => {
                 log::info!("IPC response for {}: '{a}'", info.exe_name);
@@ -105,9 +136,12 @@ impl Interceptor {
             }
         };
 
+        // Stop the killer thread before relaunching so it doesn't immediately
+        // kill the freshly relaunched process.
+        waiting.store(false, Ordering::Relaxed);
+        let _ = killer.join();
+
         if action == "continue" {
-            // Add to session whitelist — user consciously allowed this app,
-            // so don't intercept it again until the monitor restarts.
             self.session_allowed.insert(key.clone());
             log::info!("{} added to session whitelist", info.exe_name);
             match relaunch(info) {
