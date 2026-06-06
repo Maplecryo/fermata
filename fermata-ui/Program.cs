@@ -10,12 +10,6 @@ internal sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        // Hide from Dock on macOS — menu bar only.
-        // LSUIElement=true in Info.plist covers the .app bundle case; this covers
-        // dotnet run and any other launch path.
-        if (OperatingSystem.IsMacOS())
-            MacOS.SetAccessoryActivationPolicy();
-
         // Catch any unhandled exception and write it to the log file before dying.
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
             CrashLog.Write("UnhandledException", e.ExceptionObject?.ToString());
