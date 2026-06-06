@@ -119,6 +119,23 @@ public partial class ReflectionViewModel : ObservableObject
         ShowRequested?.Invoke();
     }
 
+    /// Called when the reflection window loses focus. Resets the countdown
+    /// so the user can't bypass the delay by switching to another app.
+    public void ResetCountdown()
+    {
+        // Only reset if the countdown is still running.
+        if (CountdownFinished) return;
+
+        CountdownSeconds = _config.Current.DelaySeconds;
+        CountdownLabel = "seconds left";
+
+        _timer?.Dispose();
+        _timer = new System.Threading.Timer(_ =>
+        {
+            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(Tick);
+        }, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+    }
+
     private void Tick()
     {
         if (CountdownSeconds > 0)

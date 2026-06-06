@@ -33,6 +33,10 @@ public partial class ReflectionWindow : Window
 
         vm.HideRequested += () => Hide();
         vm.ShowRequested += () => { Show(); Activate(); };
+
+        // Reset the countdown whenever the user tabs away — they can't bypass
+        // the delay by switching to another app and waiting it out there.
+        this.Deactivated += (_, _) => vm.ResetCountdown();
     }
 
     private void PulseCountdown()
